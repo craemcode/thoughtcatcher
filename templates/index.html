@@ -23,7 +23,7 @@
        {% for task in tasks %}
        <tr>
            <td> {{ task.content }}</td>
-           <td> {{ task.date.date() }}</td>
+           <td> {{ task.date.date()}}</td>
            <td>
               <a href="/update/{{ task.id }}">Update</a> 
               <a href="/delete/{{ task.id }}">Delete</a>
