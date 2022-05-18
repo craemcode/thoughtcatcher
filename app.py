@@ -1,29 +1,41 @@
+from ensurepip import bootstrap
 from flask import Flask, redirect, render_template, request
 from model import db,Todo
+from flask_bootstrap import Bootstrap
+from forms import UserForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
+app.config['SECRET_KEY'] = 'JABAWABA2'
 db.init_app(app)
+bootstrap = Bootstrap(app)
 
 
 #controller code
 
+#EPIPHANY: Create the route that the client will hit. Intercept their request. 
+# if get:
+#   do something
+#   render template with requested data (In whatever format)
+# else (if post):
+#   do something
+#   redirect to page
+#
+#
+#
+#
+#
+#
+#
 @app.route('/', methods = ['POST','GET'])
 def index():
-    if request.method == 'POST':
-        task_content = request.form['content']
-        new_task = Todo(content=task_content)
-
-        try:
-            db.session.add(new_task)
-            db.session.commit()
-            return redirect('/')
-        except:
-            return 'There was an accident'
-    else:
-        tasks = Todo.query.order_by(Todo.date).all()
+    name = None
+    form = UserForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ''
         
-        return render_template('index.html', tasks=tasks )
+    return render_template('index.html', form=form, name=name )
 
 @app.route('/delete/<int:id>')
 def delete(id):
