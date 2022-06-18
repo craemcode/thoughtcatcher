@@ -84,18 +84,25 @@ def add_thought():
            topic = Topic(name=form2.topic.data, user_id=session.get('id'))
            db.session.add(topic)
            db.session.commit()
-           form2.topic.data=''
-           flash('new topic added')
-           return redirect('/add_thought')
-
            
-           #thought = Thought(content=form2.thought.data, topic_id=topic.id)
-           #db.session.add(thought)
-           #db.session.commit()
-           #flash('thought successfully added')
+           flash('new topic added')
+
+           nu_topic = Topic.query.filter_by(name=form2.topic.data).first()
+           thought = Thought(content=form2.thought.data, topic_id=nu_topic.id)
+           db.session.add(thought)
+           db.session.commit()
+           flash('thought successfully added')
+           return redirect('/add_thought')
+           
        else:
             thought = Thought(content=form2.thought.data, topic_id=topic.id)
+            db.session.add(thought)
+            db.session.commit()
+            form2.thought.data = ''
             flash('thought successfully added')
+            return redirect('/add_thought')
+       
+       
     else:
         pass
     
