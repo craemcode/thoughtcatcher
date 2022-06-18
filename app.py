@@ -32,33 +32,31 @@ bootstrap = Bootstrap(app)
 def index():
     
     name = None
-    
     form = UserForm()
     
-    
     if form.validate_on_submit():
-        #flash("Name successfully submitted")
-        #beat the redirect
+        flash("Name successfully submitted")
         
+        #check if user 
         user = User.query.filter_by(name=form.name.data).first()
         
         if user is None:
             #session['known'] = False
             flash('unkown user')
-            session['name'] = form.name.data
             form.name.data = ''
             return redirect('/')
             
         else:
             #session['known'] = True
+            #useful for adding topics in the /add_thought
             session['id'] = user.id
             session['name'] = form.name.data
             form.name.data = ''
             return redirect('/add_thought')
                  
     else:
-        pass
-        #fix this my niggar
+        session['name']= ''
+        #we dont want dirty dishes in the cookie
 
     
     
@@ -68,6 +66,8 @@ def index():
                             #known=session.get('known', False)
                             )
 
+
+#this route is for adding thoughts in db. Check models.py for relationships
 @app.route('/add_thought',methods=['POST','GET'])
 def add_thought():
 
@@ -78,19 +78,23 @@ def add_thought():
     #If new topic, add topic to db, then get id...if old topic just add straight
     
     if form2.validate_on_submit():
+       
        topic = Topic.query.filter_by(name=form2.topic.data).first()
        if topic is None:
-           topic = Topic(name=form2.topic.data, user_id=session.get['id'])
+           topic = Topic(name=form2.topic.data, user_id=session.get('id'))
            db.session.add(topic)
            db.session.commit()
+           form2.topic.data=''
            flash('new topic added')
+           return redirect('/add_thought')
 
-           thought = Thought(name=form2.thought.data, topic_id=topic.id)
-           db.session.add(thought)
-           db.session.commit()
-           flash('thought successfully added')
+           
+           #thought = Thought(content=form2.thought.data, topic_id=topic.id)
+           #db.session.add(thought)
+           #db.session.commit()
+           #flash('thought successfully added')
        else:
-            thought = Thought(name=form2.thought.data, topic_id=topic.id)
+            thought = Thought(content=form2.thought.data, topic_id=topic.id)
             flash('thought successfully added')
     else:
         pass
@@ -99,6 +103,9 @@ def add_thought():
     return render_template('thoughts.html', 
                                 form2=form2,
                                 name=session.get('name'))                                        
+
+#I need a special function to handle the insertion of a new topic
+# this is to avoid the problem that comes with doing two queries at once.
 
 
 
