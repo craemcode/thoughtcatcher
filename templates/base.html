@@ -1,6 +1,12 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block title %}Thought Catcher {% endblock %}
+{% block head %}
+{{super()}}
+<link rel="styelesheet" href="{{url_for('static', filename='css/main.css')}}">
+{% endblock %}
+
+{% block title %}Thought Catcher {% endblock%}
+
 
 {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
@@ -12,7 +18,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Flasky</a>
+                <a class="navbar-brand" href="/">Vent in Private!</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -26,7 +32,18 @@
  
     {% block content %}
     <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{message}}
+        </div>
+        {% endfor %}
+
+    </div>
+    <div class="container">
         {% block page_content %}
+        <!--Page content goes into this block-->
+        
         {% endblock %}
 
 

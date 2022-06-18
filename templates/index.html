@@ -3,18 +3,12 @@
 
 
 
-{% block title %}
-Zacharia
-{% endblock %}
-
-
-
-
 {% block page_content %}
-<div class="content">
+<div class="content" style="width:80% ;background:azure">
     <h1>Thought Catcher</h1>
     <h3> Hello : {{ name }}</h3>
-    {{ wtf.quick_form(form)}}
+    {{ wtf.quick_form(form1)}}
+    {{ wtf.quick_form(form2)}}
     
 </div>
 {% endblock %}
