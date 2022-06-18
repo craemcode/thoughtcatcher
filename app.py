@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, request, session, flash
 from model import db,Todo,User,Topic,Thought
 from flask_bootstrap import Bootstrap
 from forms import UserForm, ThoughtForm
+import time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
@@ -10,6 +11,9 @@ app.config['SECRET_KEY'] = 'JABAWABA2'
 db.init_app(app)
 bootstrap = Bootstrap(app)
 
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db=db, User=User, Topic=Topic, Thought=Thought)
 
 #controller code
 
@@ -42,15 +46,23 @@ def index():
         
         if user is None:
             #session['known'] = False
-            flash('unkown user')
-            form.name.data = ''
-            return redirect('/')
+            nu_user = User(name=form.name.data)
+            db.session.add(nu_user)
+            db.session.commit()
             
+            new_user = User.query.filter_by(name=form.name.data).first()
+            session['id'] = new_user.id
+            session['name'] = new_user.name
+            flash('You have been registered!')
+            form.name.data = ''
+            return redirect('/add_thought')
+            
+
         else:
             #session['known'] = True
             #useful for adding topics in the /add_thought
             session['id'] = user.id
-            session['name'] = form.name.data
+            session['name'] = user.name
             form.name.data = ''
             return redirect('/add_thought')
                  
@@ -113,6 +125,31 @@ def add_thought():
 
 #I need a special function to handle the insertion of a new topic
 # this is to avoid the problem that comes with doing two queries at once.
+
+#New route. We want to show the user their thoughts. We will need about
+#three queries. But we'll manage.
+
+@app.route('/display_thoughts', methods=['GET'])
+def get_thoughts():
+    topics= None
+    thought=None
+    entrees= []
+    
+
+    topics= Topic.query.filter_by(user_id=session.get('id')).all()
+
+    for topic in topics:
+        topic_date=topic.date_created
+        format_date=topic_date.strftime("%Y-%m-%d %H:%M")
+        data = (topic.name, format_date)
+        entrees.append(data)
+
+    
+
+    
+
+
+    return render_template('display.html', entrees=entrees, name=session.get('name'))
 
 
 

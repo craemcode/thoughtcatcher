@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% import "bootstrap/wtf.html" as wtf%}
+
+
+{% block page_content %}
+
+
+<div class="content" style="width:80% ;background:azure">
+    <h3>My Previous thoughts. User: {{name}}</h3>
+      
+    
+    {% for data in entrees %}
+    
+        <p>     {{data[0]}},    {{data[1]}}</p>
+    
+    {% endfor %}
+    
+</div>    
+
+
+
+
+
+
+{% endblock %}
