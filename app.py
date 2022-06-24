@@ -1,15 +1,16 @@
 from ensurepip import bootstrap
-from flask import Flask, redirect, render_template, request, session, flash
+from flask import Flask, redirect, render_template, request, session, flash, url_for
 from model import db,Todo,User,Topic,Thought
 from flask_bootstrap import Bootstrap
 from forms import UserForm, ThoughtForm
-import time
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
 app.config['SECRET_KEY'] = 'JABAWABA2'
 db.init_app(app)
 bootstrap = Bootstrap(app)
+
 
 @app.shell_context_processor
 def make_shell_context():
@@ -119,65 +120,36 @@ def add_thought():
         pass
     
     
-    return render_template('thoughts.html', 
+    return render_template('add_thoughts.html', 
                                 form2=form2,
                                 name=session.get('name'))                                        
 
-#I need a special function to handle the insertion of a new topic
-# this is to avoid the problem that comes with doing two queries at once.
+
 
 #New route. We want to show the user their thoughts. We will need about
 #three queries. But we'll manage.
 
-@app.route('/display_thoughts', methods=['GET'])
+@app.route('/display_topics', methods=['GET'])
 def get_thoughts():
     topics= None
     thought=None
-    entrees= []
+    id=session.get('id')
     
 
-    topics= Topic.query.filter_by(user_id=session.get('id')).all()
-
-    for topic in topics:
-        topic_date=topic.date_created
-        format_date=topic_date.strftime("%Y-%m-%d %H:%M")
-        data = (topic.name, format_date)
-        entrees.append(data)
-
+    topics= Topic.query.filter_by(user_id=id).all()
     
-
-    
-
-
-    return render_template('display.html', entrees=entrees, name=session.get('name'))
+    return render_template('topic_display.html', topics=topics, name=session.get('name'))
 
 
+@app.route('/show_thoughts/<int:id>&<string:topic_name>')
+def delete(id,topic_name):
+
+    thoughts = Thought.query.filter_by(topic_id=id).all()
+     
+    return render_template('thought.html', thoughts=thoughts, topic_name=topic_name,name=session.get('name'))
 
 
 
-
-@app.route('/delete/<int:id>')
-def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
-    try:
-        db.session.delete(task_to_delete)
-        db.session.commit()
-        return redirect('/')
-    except:
-        return 'There was an accident'
-
-@app.route('/update/<int:id>',methods = ['POST','GET'])
-def update(id):
-    task = Todo.query.get_or_404(id)
-    if request.method == 'POST':
-        task.content = request.form['content']
-        try:
-            db.session.commit()
-            return redirect('/')
-        except:
-            return "An accident happened"
-    else:
-        return render_template('update.html', task=task)
     
 
 
