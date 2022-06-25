@@ -1,0 +1,12 @@
+#flexbox{
+    gap: 10px;
+    flex-wrap: wrap;
+   
+}
+.card{
+    width: 300px;
+    transition: transform 300ms ease-in-out; 
+}
+.card:hover{
+    transform: scale(1.05);
+}
