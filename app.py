@@ -1,15 +1,18 @@
-from ensurepip import bootstrap
-from flask import Flask, redirect, render_template, request, session, flash, url_for
+
+from flask import Flask, redirect, render_template, request, session, flash, jsonify
 from model import db,Todo,User,Topic,Thought
-from flask_bootstrap import Bootstrap
+
 from forms import UserForm, ThoughtForm
+from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
 app.config['SECRET_KEY'] = 'JABAWABA2'
 db.init_app(app)
-bootstrap = Bootstrap(app)
+
+
+migrate = Migrate(app, db)
 
 
 @app.shell_context_processor
@@ -79,6 +82,30 @@ def index():
                             #known=session.get('known', False)
                             )
 
+#Register New Users
+@app.route('/register', methods=['POST'])
+def register():
+    form = UserForm()
+    if form.validate_on_submit:
+        name = form.name.data
+        question = form.name.question
+        answer = form.name.answer
+        nu_user = User(name=name,question=question,answer=answer)
+        try:
+            db.session.add(nu_user)
+            db.session.commit()
+            flash('user added')
+            return redirect('/add_thought')
+        except:
+            flash('db error!')
+    else:
+        return redirect('/')    
+
+
+
+
+
+
 
 #this route is for adding thoughts in db. Check models.py for relationships
 @app.route('/add_thought',methods=['POST','GET'])
@@ -102,19 +129,24 @@ def add_thought():
 
            nu_topic = Topic.query.filter_by(name=form2.topic.data).first()
            thought = Thought(content=form2.thought.data, topic_id=nu_topic.id)
-           db.session.add(thought)
-           db.session.commit()
-           flash('thought successfully added')
-           return redirect('/add_thought')
+           try:
+            db.session.add(thought)
+            db.session.commit()
+            flash('thought successfully added')
+            return redirect('/add_thought')
+           except:
+                flash('An error happened')
            
        else:
             thought = Thought(content=form2.thought.data, topic_id=topic.id)
-            db.session.add(thought)
-            db.session.commit()
-            form2.thought.data = ''
-            flash('thought successfully added')
-            return redirect('/add_thought')
-       
+            try:
+                db.session.add(thought)
+                db.session.commit()
+                form2.thought.data = ''
+                flash('thought successfully added')
+                return redirect('/add_thought')
+            except:
+                flash('An error happened')
        
     else:
         pass

@@ -1,3 +1,8 @@
 body{
     background: azure;
 }
+#welcome{
+    background: rgb(113, 102, 209);
+    height: 700px;
+    text-align: center;
+}

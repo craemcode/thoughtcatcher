@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
-{% import "bootstrap/wtf.html" as wtf%}
-
-
 
 {% block page_content %}
-<div class="content" style="width:80% ;background:azure">
-    <h1>Thought Catcher</h1>
-    <h3> Hello : {{ name }}</h3>
-    {{ wtf.quick_form(form1)}}
-    <h2>please authenticate</h2>
-    
-    
-</div>
+ <article id="welcome" class="container-fluid">
+    <h2>
+        Welcome to Thought Catcher Improved
+    </h2>
+    <span>
+        Features:
+    </span>
+    <ul>
+        <li>
+            Record Thoughts
+        </li>
+        <li>
+            Retrieve Them
+        </li>
+        <li>
+            Always Available
+        </li>
+    </ul>
+    <a class="btn btn-primary" href="/add_thought.html"> Get Started</a>
+ </article>
+
 {% endblock %}
