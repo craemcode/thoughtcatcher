@@ -40,12 +40,13 @@ def index():
     form = UserForm()
     
     if form.validate_on_submit():
-        flash("Name successfully submitted")
+
         
         #check if user 
         user = User.query.filter_by(name=form.name.data).first()
         
         if user is None:
+            """no new users
             #session['known'] = False
             nu_user = User(name=form.name.data)
             db.session.add(nu_user)
@@ -54,9 +55,10 @@ def index():
             new_user = User.query.filter_by(name=form.name.data).first()
             session['id'] = new_user.id
             session['name'] = new_user.name
-            flash('You have been registered!')
+            """
+            flash('Access Denied!')
             form.name.data = ''
-            return redirect('/add_thought')
+            return redirect('/')
             
 
         else:
@@ -142,7 +144,7 @@ def get_thoughts():
 
 
 @app.route('/show_thoughts/<int:id>&<string:topic_name>')
-def delete(id,topic_name):
+def show_topic(id,topic_name):
 
     thoughts = Thought.query.filter_by(topic_id=id).all()
      

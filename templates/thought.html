@@ -6,7 +6,7 @@
         <h3>Topic: {{topic_name}}</h3>
         {% for thought in thoughts%}
         <div class="thought_item">
-            <h4>{{thought.date_created.date()}}</h4>
+            <h4>{{thought.date_created.strftime("%a %d %b %Y")}}</h4>
             <p>
                 {{thought.content}}
             </p>
