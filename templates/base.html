@@ -1,6 +1,6 @@
 {% extends 'bootstrap/base.html' %}
 
-    <link rel="styelesheet" href="{{url_for('static', filename='css/main.css')}}">
+    <link rel="styelesheet" href="{{url_for('static', filename='..css/main.css')}}">
 
 {% block head %}
 {{super()}}
@@ -10,7 +10,7 @@
 {% block title %}Thought Catcher {% endblock%}
 
 
-{% block navbar %}
+    {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Vent in Private!</a>
+                <a class="navbar-brand" href="/">TC!</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-{% endblock %}
+    {% endblock %}
  
     {% block content %}
     <div class="container">

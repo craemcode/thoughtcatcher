@@ -151,9 +151,14 @@ def show_topic(id,topic_name):
     return render_template('thought.html', thoughts=thoughts, topic_name=topic_name,name=session.get('name'))
 
 
+@app.route('/delete_topic/<int:id>')
+def delete_topic(id):
 
-    
-
+    thought = Topic.query.filter_by(id=id).first()
+    db.session.delete(thought)
+    db.session.commit()
+    flash('thought successfully deleted')
+    return redirect('/display_topics')
 
 if __name__ == "__main__":
     app.run(debug=True)
