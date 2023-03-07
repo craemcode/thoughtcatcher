@@ -5,27 +5,29 @@
 {% block page_content %}
 
 
-<div class="content" style="width:80% ;background:azure">
+<div class="container-md" style="background:azure">
     <h3>My Previous thoughts. User: {{name}}</h3>
-      
-    <table>
-        <tr>
-            <th>Topic</th>
-            <th>Time</th>
-        </tr>
+
+    <ol class="list-group list-group-numbered">
         {% for topic in topics %}
-        <tr>
-            
-            <td><a href="/show_thoughts/{{topic.id}}&{{topic.name}}">{{topic.name}}</a></td>
-            <td> {{topic.date_created.date()}}</td>
-        </tr>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+
+                <div class="fw-bold">
+                    {{topic.name}}
+                </div>
+
+                {{topic.date_created.strftime("%a %d %b %Y")}}
+                <a href="/show_thoughts/{{topic.id}}&{{topic.name}}" class="btn btn-primary float-right">go</a>
+            </div>
+
+
+        </li>
         {% endfor %}
 
-    </table>
-   </p>
-    
-    
-    
+    </ol>
+
+
 </div>    
 
 
