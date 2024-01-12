@@ -5,12 +5,18 @@
         <h2>User: {{name}}</h2>
         <h3>Topic: {{topic_name}}</h3>
         {% for thought in thoughts%}
-        <div class="thought_item">
-            <h4>{{thought.date_created.strftime("%a %d %b %Y")}}</h4>
-            <p>
+        <ul class="list-group" >
+            <li class="list-group-item">
+
+
+            <div class="thought_item">
+                <h4>{{thought.date_created.strftime("%a %d %b %Y")}}</h4>
+                 <p>
                 {{thought.content}}
-            </p>
-        </div>
+                </p>
+            </div>
+            </li>
+        </ul>
         {% endfor %}
     </div>
 

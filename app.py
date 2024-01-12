@@ -3,6 +3,7 @@ from flask import Flask, redirect, render_template, request, session, flash, url
 from model import db,Todo,User,Topic,Thought
 from flask_bootstrap import Bootstrap
 from forms import UserForm, ThoughtForm
+from sqlalchemy import desc
 
 
 app = Flask(__name__)
@@ -134,12 +135,11 @@ def add_thought():
 @app.route('/display_topics', methods=['GET'])
 def get_thoughts():
     topics= None
-    thought=None
-    id=session.get('id')
-    
 
-    topics= Topic.query.filter_by(user_id=id).all()
-    
+    id=session.get('id')
+
+    topics = Topic.query.filter_by(user_id=id).all()
+    topics.reverse()
     return render_template('topic_display.html', topics=topics, name=session.get('name'))
 
 
